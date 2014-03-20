@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="content-type" content="text/html;charset=utf-8"/>
+    
+    <!-- Set the viewport to show the page at a scale of 1.0, and make it non-scalable -->
+    <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;"/>
+    
+    <!-- Make it fullscreen / hide the browser URL bar -->
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    
+    <!--
+        Give the status bar another colour
+        Valid values for "content" are: "default" (white), "black" and "black-translucent"
+        If set to "default" or "black", the content is displayed below the status bar. If set to
+        "black-translucent", the content is displayed under the bar.
+    -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    
+    <!--
+        Add a Home icon.
+        By default, Mobile Safari searches for a file named "apple-touch-icon.png" in the root directory of your website.
+        If it can't find any image there, you can specify it using the code below. Make sure the image has a dimension
+        of 114x114 and is a PNG file. The glossy finish and resizing for the different devices will be done automatically.
+        
+        In case you don't want the gloss applied, use "apple-touch-icon-precomposed" instead of "apple-touch-icon".
+    -->
+    <link rel="apple-touch-icon" href="seal-icon.png" />
+    <link rel="apple-touch-startup-image" href="seal-startup.png" />
+    
+    <!--
+        Add a splash screen / startup image.
+        Take note this file exactly needs to be 320x460 for iPhone or 1004x768 for iPad, and is a PNG file.
+        Also, this only works if "apple-mobile-web-app-capable" is set to "yes".
+    -->
+    
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<script type="text/javascript">
+      function writeAddressName(latLng) {
+        var geocoder = new google.maps.Geocoder();
+        geocoder.geocode({
+          "location": latLng
+        },
+        function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK)
+		  {
+			  var r=confirm("Is this address correct? \n" + results[0].formatted_address);
+			  if (r==true)
+			  {
+					document.getElementById("location").value = results[0].formatted_address;
+			  }
+			  else
+			  {
+			  		alert("Please enter the correct location");
+			  }
+		  }
+          else
+            document.getElementById("location").value += "Unable to retrieve your address" + "<br />";
+        });
+      }
+ 
+      function geolocationSuccess(position) {
+        var userLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        // Write the formatted address
+        writeAddressName(userLatLng);
+ 
+        // Draw the map
+      }
+ 
+      function geolocationError(positionError) {
+        document.getElementById("location").value += "Error: " + positionError.message + "<br />";
+      }
+ 
+      function geolocateUser() {
+        // If the browser supports the Geolocation API
+        if (navigator.geolocation)
+        {
+          var positionOptions = {
+            enableHighAccuracy: true,
+            timeout: 10 * 1000 // 10 seconds
+          };
+          navigator.geolocation.getCurrentPosition(geolocationSuccess, geolocationError, positionOptions);
+        }
+        else
+          document.getElementById("error").innerHTML += "Your browser doesn't support the Geolocation API";
+      }
+</script>
+
+<title>COF Code Complaint</title>
+</head>
+
+<body>
+<p>&nbsp;</p>
+<form name="form1" method="post" action="http://spires2.cityoffrederick.com/mobile/CodeComplaint/sendmail.php" enctype="multipart/form-data" autocomplete="off">
+<table width="100%" border="0">
+  <tr>
+    <td>Location of Issue <br>
+(Address, Street<br>
+Name, or Intersection)*</td>
+    <td><label for="location"></label>
+    <input name="location" type="text" id="location" size="25" style="height: 30px;"> <input type="hidden" name="location2" id="location2">
+    <br />
+    <input type="button" name="getMyLocation" id="getMyLocation" value="Tap to get current location" onClick="geolocateUser()"></td>
+  </tr>
+  <tr>
+    <td><label for="e_1323">Description of <br>
+    Issue*</label></td>
+    <td><textarea name="Description" title="Description of Issue" id="Description" rows="5" cols="20" alt="Description of Issue"></textarea></td>
+  </tr>
+  <tr>
+    <td><label for="e_1324">Name*</label></td>
+    <td><input name="Name" title="Name" id="Name" type="text" size="25" maxlength="255" alt="Name" value="" style="height: 30px;"/></td>
+  </tr>
+  <tr>
+    <td>Address</td>
+    <td><input name="Address" title="Address" id="Address" type="text" size="25" maxlength="255" alt="Address" value="" style="height: 30px;"/></td>
+  </tr>
+  <tr>
+    <td>Email*</td>
+    <td><input name="Email" title="Email" id="Email" type="email" size="25" maxlength="255" alt="Email" value="" style="height: 30px;"/></td>
+  </tr>
+  <tr>
+    <td><label for="e_1327">Phone Number*</label></td>
+    <td><div>
+      <input name="Phone" title="Phone Number" id="Phone" type="tel" size="25" maxlength="255" alt="Phone Number" value="" style="height: 30px;"/>
+    </div></td>
+  </tr>
+  <tr>
+    <td><label for="e_1328">Preferred Contact <br>
+    Method</label></td>
+    <td><select name="Contact" title="Preferred Contact Method" id="Contact" onchange="SetDropDownText(this);" alt="Preferred Contact Method">
+      <option value="Phone" selected="selected">Phone</option>
+      <option value="Email">Email</option>
+      <option value="Do not contact me">Do not contact me</option>
+    </select></td>
+  </tr>
+  <tr>
+    <td>Upload Picture:</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
+<p align="center"><input type="file" name="picture" id="picture" /></p>
+  <p>* indicates required fields. </p>
+  <p>
+    <input type="submit" name="Submit" id="Submit" value="Submit">
+    <input type="reset" name="Reset" id="Reset" value="Reset">
+  </p>
+</form>
+<p>&nbsp;</p>
+</body>
+</html>
